@@ -9,6 +9,26 @@
   function MainController($timeout, webDevTec, toastr, $mdDialog) {
     var vm = this;
 
+
+
+
+/*
+    $('#customButton').on('click', function(e) {
+      // Open Checkout with further options
+      handler.open({
+        name: 'Demo Site',
+        description: '2 widgets',
+        amount: 2000
+      });
+      e.preventDefault();
+    });
+
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+      handler.close();
+    });
+*/
+
     vm.awesomeThings = [];
     vm.classAnimation = '';
     vm.creationDate = 1447249605756;
@@ -61,16 +81,37 @@
     vm.showSubscruptionOptions = function(ev, type ){
 
       $mdDialog.show({
-            controller: function(){
-              //return
-            },
-            templateUrl: '/app/main/subscriptionOptions.html',
+        controller: function () {
+          var view = this;
+
+          var handler = StripeCheckout.configure({
+            key: 'pk_test_b7drTMr7VeLSYqglFulu4V7k',
+            image: 'assets/images/noun_28774_cc.png',
+            locale: 'auto',
+            token: function (token) {
+              // Use the token to create the charge with a server-side script.
+              // You can access the token ID with `token.id`
+            }
+          });
+
+          view.newSub = function (type, term) {
+            handler.open({
+              name: type + ' ' + term + ' Bag',
+              description: 'The most awesomest plan',
+              amount: 1500
+            });
+
+          };
+        }
+            ,
+            templateUrl: 'app/components/subscriptionOptions/subscriptionOptions.html',
             parent: angular.element(document.body),
             targetEvent: ev,
-            clickOutsideToClose:true
+            clickOutsideToClose:true,
+            controllerAs: 'view'
           })
           .then(function(answer) {
-
+              alert('asdf');
           }, function() {
 
           });
